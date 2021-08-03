@@ -6,7 +6,7 @@ Address: 0xfc3aEd0cB516880eBAb32C3cF935B395D976cF68
 
 https://ropsten.etherscan.io/address/0xfc3aEd0cB516880eBAb32C3cF935B395D976cF68
 
-###.env vars
+### .env vars
 ```
 - ROPSTEN_ALCHEMY_API_KEY=
 - OWNER_KEY=
