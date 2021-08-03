@@ -1,0 +1,25 @@
+---
+services:
+  devnet:
+    container_name: devnet
+    image: node:lts-alpine
+    command: sh -c "npx hardhat node"
+    volumes:
+      - ./hardhat.config.js:/hardhat/hardhat.config.js
+      - ./package.json:/hardhat/package.json
+      - ./package-lock.json:/hardhat/package-lock.json
+      - "./node_modules:/hardhat/node_modules:ro"
+    working_dir: /hardhat
+    ports:
+      - '8545:8545'
+    env_file:
+      - .env
+    environment:
+      HARDHAT_AUTOMINE: "${HARDHAT_AUTOMINE}"
+    healthcheck:
+      test: ["CMD", "npx", "hardhat", "check"]
+      interval: 1m
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+

@@ -1,0 +1,61 @@
+{
+  "name": "uniswap-erc20",
+  "version": "0.0.0",
+  "description": "Smart Contracts",
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "keywords": [],
+  "scripts": {
+    "lint": "npm run lint:js && npm run lint:solidity",
+    "lint:js": "standard",
+    "lint:js:fix": "standard --fix && ts-standard --fix",
+    "lint:solidity": "solhint 'contracts/**/*.sol'",
+    "test": "make test",
+    "test:ropsten": "npx hardhat test --network ropsten",
+    "hook": "npm run lint:js:fix && hh compile && npm run test "
+  },
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@openzeppelin/hardhat-upgrades": "^1.8.2",
+    "envfile": "^6.17.0",
+    "eth-gas-reporter": "^0.2.22",
+    "ethereum-waffle": "^3.3.0",
+    "ethers": "^5.3.1",
+    "hardhat": "^2.4.3",
+    "hardhat-contract-sizer": "^2.0.3",
+    "hardhat-gas-reporter": "^1.0.4",
+    "husky": "^7.0.1",
+    "nyc": "^15.1.0",
+    "solhint": "^3.3.6",
+    "solidity-coverage": "^0.7.16",
+    "standard": "^16.0.3"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.2.0",
+    "@openzeppelin/contracts-upgradeable": "^4.1.0",
+    "@openzeppelin/test-helpers": "^0.5.11",
+    "@uniswap/v2-core": "^1.0.1",
+    "@uniswap/v2-periphery": "^1.1.0-beta.0",
+    "dotenv": "^10.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run hook"
+    }
+  },
+  "standard": {
+    "ignore": [
+      "package.json",
+      ".gitignore",
+      "/webpack/**/*.js",
+      "/test/**/*.js"
+    ],
+    "env": [
+      "mocha"
+    ]
+  }
+}
