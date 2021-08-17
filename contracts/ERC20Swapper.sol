@@ -31,7 +31,7 @@ contract ERC20Swapper is Initializable, IERC20Swapper {
         // https://docs.uniswap.org/protocol/reference/core/interfaces/IUniswapV3Factory
         IUniswapV3Factory factory = IUniswapV3Factory(_factoryAddress);
         // https://docs.uniswap.org/protocol/reference/core/UniswapV3Pool
-        IUniswapV3Pool pool = IUniswapV3Pool(_factoryAddress.getPool(_wethAddress, token, fee));
+        IUniswapV3Pool pool = IUniswapV3Pool(factory.getPool(_wethAddress, token, fee));
         require(pool != address(0), "Invalid UniSwap Pool for Pair");
 
         // Swap tokens
