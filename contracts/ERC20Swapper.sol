@@ -49,6 +49,8 @@ contract ERC20Swapper is Initializable, IERC20Swapper {
             revert InvalidSwap();
         }
 
-        outTokens = amountToken;
+        // The delta of the balance of token1 of the pool, exact when negative, minimum when positive
+        // Thi means that amountToken = negative value, so we set positive and cast to uint
+        outTokens = uint(-amountToken);
     }
 }
