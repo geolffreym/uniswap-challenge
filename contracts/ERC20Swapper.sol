@@ -46,6 +46,8 @@ contract ERC20Swapper is Initializable, IERC20Swapper {
             abi.encode(minAmount, fee) // empty callback params
         );
 
+        // Amount > 0 = minimum
+        // Amount < 0 = exact
         if (amountToken > 0 || uint(-amountToken) < minAmount) {
             revert InvalidSwap();
         }
