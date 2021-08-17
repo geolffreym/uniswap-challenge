@@ -23,7 +23,7 @@ contract ERC20Swapper is Initializable, IERC20Swapper {
     }
 
     // Uniswap v3 is offering three fee tiers: 0.05%, 0.30%, and 1.00%.
-    function swapEtherToToken(address token, uint minAmount, uint16 fee) public override payable returns (uint outTokens){
+    function swapEtherToToken(address token, uint minAmount, uint16 fee) external override payable returns (uint){
 
         // @dev swaps the `msg.value` Ether to at least `minAmount` of tokens in `address`, or reverts
         // Current request ETH swap to "Token" get pools for WETH > Token
@@ -32,7 +32,7 @@ contract ERC20Swapper is Initializable, IERC20Swapper {
         IUniswapV3Factory factory = IUniswapV3Factory(_factoryAddress);
         // https://docs.uniswap.org/protocol/reference/core/UniswapV3Pool
         IUniswapV3Pool pool = IUniswapV3Pool(factory.getPool(_wethAddress, token, fee));
-        require(pool != address(0), "Invalid UniSwap Pool for Pair");
+        require(address(pool) != address(0), "Invalid UniSwap Pool for Pair");
 
         // Swap tokens
         // https://docs.uniswap.org/protocol/reference/core/UniswapV3Pool#swap
@@ -42,7 +42,7 @@ contract ERC20Swapper is Initializable, IERC20Swapper {
             true, //The direction of the swap, true for token0 to token1, false for token1 to token0
             int256(msg.value), // The amount of the swap
             0, // Ignore limits
-            bytes [] // empty callback params
+            abi.encode(minAmount) // empty callback params
         );
 
         if (amountToken > 0 || uint(-amountToken) < minAmount) {
@@ -51,6 +51,6 @@ contract ERC20Swapper is Initializable, IERC20Swapper {
 
         // The delta of the balance of token1 of the pool, exact when negative, minimum when positive
         // Thi means that amountToken = negative value, so we set positive and cast to uint
-        outTokens = uint(-amountToken);
+        return uint(-amountToken);
     }
 }

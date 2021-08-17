@@ -113,6 +113,98 @@
           }
         }
       }
+    },
+    "b44acde3b248b8e48c80a2cc03727c097f9e5b09e603b8765139dba690b3b18d": {
+      "address": "0xAc715d7D60Bd5Cd880654feE7f2513C68dD49aC9",
+      "txHash": "0x6db04f23089140b7748d881bfb7ac66fb78cbde5b57011c0fa66c6eb349db1cf",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:26"
+          },
+          {
+            "contract": "ERC20Swapper",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "contracts/ERC20Swapper.sol:14"
+          },
+          {
+            "contract": "ERC20Swapper",
+            "label": "_wethAddress",
+            "type": "t_address",
+            "src": "contracts/ERC20Swapper.sol:15"
+          },
+          {
+            "contract": "ERC20Swapper",
+            "label": "_factoryAddress",
+            "type": "t_address",
+            "src": "contracts/ERC20Swapper.sol:16"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_bool": {
+            "label": "bool"
+          }
+        }
+      }
+    },
+    "9e885e00c83367d6c11311929ac64564df98f2de4d3e8b22e413839c59453ad5": {
+      "address": "0x58ae05eCc13dAdcB40B982fe5A7589e1656890CB",
+      "txHash": "0x2aae30fda4baa56ed63f26c37318e6acedbd0eac0f76a7719553d7f5a435eee9",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:21"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:26"
+          },
+          {
+            "contract": "ERC20Swapper",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "contracts/ERC20Swapper.sol:14"
+          },
+          {
+            "contract": "ERC20Swapper",
+            "label": "_wethAddress",
+            "type": "t_address",
+            "src": "contracts/ERC20Swapper.sol:15"
+          },
+          {
+            "contract": "ERC20Swapper",
+            "label": "_factoryAddress",
+            "type": "t_address",
+            "src": "contracts/ERC20Swapper.sol:16"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_bool": {
+            "label": "bool"
+          }
+        }
+      }
     }
   }
 }
