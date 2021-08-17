@@ -2,8 +2,9 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
-import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
+import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
+import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol";
+import "@uniswap/v3-periphery/contracts/interfaces/IPeripheryImmutableState.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./IERC20Swapper.sol";
 
@@ -11,41 +12,43 @@ import "./IERC20Swapper.sol";
 contract ERC20Swapper is Initializable, IERC20Swapper {
 
     address internal _owner;
-    // https://ropsten.etherscan.io/address/0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D
-    address private constant UNISWAP_V2_ROUTER = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
+    address internal _wethAddress;
+    address internal _factoryAddress;
 
     // https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable
-    function initialize() public initializer {
+    function initialize(IPeripheryImmutableState router) public initializer {
         _owner = msg.sender;
+        _wethAddress = router.WETH9();
+        _factoryAddress = router.factory();
     }
 
-
-    function swapEtherToToken(address token, uint minAmount) public override payable returns (uint){
-
-        //https://docs.uniswap.org/protocol/V2/guides/smart-contract-integration/trading-from-a-smart-contract
-        require(IERC20(token).transferFrom(msg.sender, address(this), minAmount), 'transferFrom failed.');
-        require(IERC20(token).approve(UNISWAP_V2_ROUTER, minAmount), 'approve failed.');
-
-        // fetch address via router > default ropsten uni router
-        IUniswapV2Router02 router = IUniswapV2Router02(UNISWAP_V2_ROUTER);
-        address weth = router.WETH();
-        // canonical WETH address
-        IUniswapV2Factory factory = IUniswapV2Factory(router.factory());
+    // Uniswap v3 is offering three fee tiers: 0.05%, 0.30%, and 1.00%.
+    function swapEtherToToken(address token, uint minAmount, uint16 fee) public override payable returns (uint outTokens){
 
         // @dev swaps the `msg.value` Ether to at least `minAmount` of tokens in `address`, or reverts
-        // Current request ETH swap to "Token"
-        address pair = factory.getPair(token, weth);
-        require(pair != address(0), "Invalid UNI Pairs");
-        // Check for valid pair in
-        address[] memory path = new address[](2);
-        path[0] = weth;
-        path[1] = token;
+        // Current request ETH swap to "Token" get pools for WETH > Token
+        // https://docs.uniswap.org/protocol/reference/core/UniswapV3Factory
+        // https://docs.uniswap.org/protocol/reference/core/interfaces/IUniswapV3Factory
+        IUniswapV3Factory factory = IUniswapV3Factory(_factoryAddress);
+        // https://docs.uniswap.org/protocol/reference/core/UniswapV3Pool
+        IUniswapV3Pool pool = IUniswapV3Pool(_uniswapFactoryAddress.getPool(_wethAddress, token, fee));
+        require(pool != address(0), "Invalid UniSwap Pool for Pair");
 
-        //swapExactETHForTokens
-        //for the deadline we will pass in block.timestamp
-        //the deadline is the latest time the trade is valid for
-        // uint[] memory = [whetAmount, tokenAmount]
-        // swapExactETHForTokens can be done using pair.swap and some logic to improve perf..
-        return router.swapExactETHForTokens{value : msg.value}(minAmount, path, msg.sender, block.timestamp)[1];
+        // Swap tokens
+        // https://docs.uniswap.org/protocol/reference/core/UniswapV3Pool#swap
+        // The delta of the balance of token1 of the pool, exact when negative, minimum when positive
+        (,int256 amountToken) = pool.swap(
+            address(this), // contract hold the tokens,
+            true, //The direction of the swap, true for token0 to token1, false for token1 to token0
+            int256(msg.value), // The amount of the swap
+            0, // Ignore limits
+            bytes [] // empty callback params
+        );
+
+        if (amountToken > 0 || uint(-amountToken) < minAmount) {
+            revert  "Invalid Swap";
+        }
+
+        outTokens = amountToken;
     }
 }
