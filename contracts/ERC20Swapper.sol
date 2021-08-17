@@ -42,7 +42,8 @@ contract ERC20Swapper is Initializable, IERC20Swapper {
             true, //The direction of the swap, true for token0 to token1, false for token1 to token0
             int256(msg.value), // The amount of the swap
             0, // Ignore limits
-            abi.encode(minAmount) // empty callback params
+            // https://docs.soliditylang.org/en/v0.8.0/abi-spec.html
+            abi.encode(minAmount, fee) // empty callback params
         );
 
         if (amountToken > 0 || uint(-amountToken) < minAmount) {
