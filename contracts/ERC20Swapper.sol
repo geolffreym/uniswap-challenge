@@ -10,7 +10,7 @@ import "./IERC20Swapper.sol";
 
 
 contract ERC20Swapper is Initializable, IERC20Swapper {
-
+    error InvalidSwap();
     address internal _owner;
     address internal _wethAddress;
     address internal _factoryAddress;
@@ -46,7 +46,7 @@ contract ERC20Swapper is Initializable, IERC20Swapper {
         );
 
         if (amountToken > 0 || uint(-amountToken) < minAmount) {
-            revert  "Invalid Swap";
+            revert InvalidSwap();
         }
 
         outTokens = amountToken;
